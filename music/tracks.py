@@ -37,8 +37,8 @@ CREATE TABLE Genre (
 )
 ''')
 
-
-fname = 'Library.xml'
+fname = raw_input('Enter file name: ')
+if ( len(fname) < 1 ) : fname = 'Library.xml'
 
 # <key>Track ID</key><integer>369</integer>
 # <key>Name</key><string>Another One Bites The Dust</string>
@@ -65,8 +65,10 @@ for entry in all:
     length = lookup(entry, 'Total Time')
     genre_name = lookup(entry, 'Genre')
 
-    if name is None or artist is None or album is None :
+    if name is None or artist is None or album is None or genre_name is None:
         continue
+
+    # print name, artist, album, count, rating, length, genre_name
 
     cur.execute('''INSERT OR IGNORE INTO Artist (name)
         VALUES ( ? )''', ( artist, ) )
@@ -86,7 +88,7 @@ for entry in all:
     cur.execute('''INSERT OR REPLACE INTO Track
         (title, album_id, genre_id, len, rating, count)
         VALUES ( ?, ?, ?, ?, ?, ? )''',
-        ( name, album_id, 0, length, rating, count ) )
+        ( name, album_id, genre_id, length, rating, count ) )
 
 conn.commit()
 
